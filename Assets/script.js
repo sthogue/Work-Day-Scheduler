@@ -1,13 +1,4 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 $(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
   //
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
@@ -39,10 +30,34 @@ $(function () {
     // gets text value user inputs for current time
     var textInput = $(this).parent().children("textarea").val();
     console.log(textInput);
-    
+
     // Saves user input into local storage. Name is Hour Name ID and the day so user inputs the text so
     //they can look back to previous days if needed
     localStorage.setItem(hourClicked + " " + dayjs().format("M/DD/YY"),JSON.stringify(textInput));
    }
+
+   
+    
+   function timeBlockColor(){
+    // declare variables
+    // get current time
+    var currentHour = dayjs()
+    var timeBlock = $(".time-block")
+    var timeBlockVal= timeBlock.attr("id")
+    var timeBlockValNum = timeBlockVal.each(function (index){
+      console.log(index.text().replace("hour-", ""));
+    });
+
+
+    
+    console.log(timeBlock)
+    console.log(timeBlockVal);
+    // get all time blocks
+    // if in past change class to "past"
+    // if current time block change class to "present"
+    // if in future change class to future
+
+   }
+   timeBlockColor();
    $("button").click(saveUserInput);
 });

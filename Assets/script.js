@@ -11,9 +11,7 @@ $(function () {
   // attribute of each time-block be used to do this?
 
 
-  // add event listener to save data for each hour
-  // add function to apply style for hour block
-  // add function to get local storage
+  // add function to get local storage and renders it on sheet when page is refreshed
 
 
   var timeDisplayEl =$("#currentDay");
@@ -36,28 +34,36 @@ $(function () {
     localStorage.setItem(hourClicked + " " + dayjs().format("M/DD/YY"),JSON.stringify(textInput));
    }
 
-   
-    
-   function timeBlockColor(){
-    // declare variables
-    // get current time
-    var currentHour = dayjs()
-    var timeBlock = $(".time-block")
-    var timeBlockVal= timeBlock.attr("id")
-    var timeBlockValNum = timeBlockVal.each(function (index){
-      console.log(index.text().replace("hour-", ""));
+  // function changes row color depending on current time  
+  function timeBlockColor(){
+    // for each time block class it will pick up all the Div IDs
+    $('.time-block').each(function() {
+      var blockHour = parseInt(
+        $(this)
+          .attr('id')
+          // removes "hour-" from Div IDs leaving only the number 
+          .split('-')[1]
+      );
+      // converts string into integer so it can be compared to the Div's hour IDs
+      var hourTextConversion = parseInt(dayjs().format("HH"));
+      // if the block hour is in the past
+      if (blockHour < hourTextConversion){
+        $('.time-block').addClass("past");
+        $('.time-block').removeClass("present");
+        $('.time-block').removeClass("future");
+        // if block hour is in the future
+      } else if (blockHour > hourTextConversion){
+        $('.time-block').addClass("future");
+        $('.time-block').removeClass("present");
+        $('.time-block').removeClass("past");
+        // if the block hour = the current hour
+      } else {
+        $('.time-block').addClass("present");
+        $('.time-block').removeClass("future");
+        $('.time-block').removeClass("past");
+      }
     });
-
-
-    
-    console.log(timeBlock)
-    console.log(timeBlockVal);
-    // get all time blocks
-    // if in past change class to "past"
-    // if current time block change class to "present"
-    // if in future change class to future
-
-   }
+  }  
    timeBlockColor();
    $("button").click(saveUserInput);
 });

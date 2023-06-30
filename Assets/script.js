@@ -1,11 +1,4 @@
 $(function () {
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
@@ -13,6 +6,9 @@ $(function () {
 
   // add function to get local storage and renders it on sheet when page is refreshed
 
+  function loadLocalStorage(){
+    
+  }
 
   var timeDisplayEl =$("#currentDay");
    function displayTime(){
@@ -36,33 +32,27 @@ $(function () {
 
   // function changes row color depending on current time  
   function timeBlockColor(){
-    // for each time block class it will pick up all the Div IDs
+    // gets the current hour and turns it into an integer
+    var hourTextEl = parseInt(dayjs().format("HH"));
     $('.time-block').each(function() {
       var blockHour = parseInt(
         $(this)
           .attr('id')
           // removes "hour-" from Div IDs leaving only the number 
-          .split('-')[1]
-      );
-      // converts string into integer so it can be compared to the Div's hour IDs
-      var hourTextConversion = parseInt(dayjs().format("HH"));
-      // if the block hour is in the past
-      if (blockHour < hourTextConversion){
-        $('.time-block').addClass("past");
-        $('.time-block').removeClass("present");
-        $('.time-block').removeClass("future");
-        // if block hour is in the future
-      } else if (blockHour > hourTextConversion){
-        $('.time-block').addClass("future");
-        $('.time-block').removeClass("present");
-        $('.time-block').removeClass("past");
-        // if the block hour = the current hour
-      } else {
-        $('.time-block').addClass("present");
-        $('.time-block').removeClass("future");
-        $('.time-block').removeClass("past");
-      }
-    });
+          .split('-')[1])
+          // adds the class of "past", "present", or "future". Uses If else statement to compare
+         $(this).addClass(function (){
+            if (blockHour < hourTextEl){
+              return "past";
+            } else if (blockHour === hourTextEl){
+              return "present";
+              } else {
+                return "future";
+              }}
+          )
+        console.log(blockHour);
+        console.log(hourTextEl);
+      });    
   }  
    timeBlockColor();
    $("button").click(saveUserInput);

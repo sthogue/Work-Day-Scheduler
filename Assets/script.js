@@ -1,34 +1,41 @@
 $(function () {
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-
-
-  // add function to get local storage and renders it on sheet when page is refreshed
-
-  function loadLocalStorage(){
-    
+  
+  // renders local storage and displays it on the page
+  function loadLocalStorage(){  
+    // finds every time block class
+    $('.time-block').each(function(){
+      // finds the text area for each hour
+      var textarea = $(this).children("textarea");
+      // finds the local storage key for everything in local storage
+      var key = $(this).attr("id") + " " + dayjs().format("M/DD/YY");
+      // gets everything in local storage
+      var task = localStorage.getItem(key);
+      // inserts text for each hour theres something in local storage 
+      textarea.text(task);
+    }) 
   }
-
+  
+  // function to display current day 
+  function displayTime(){
+  // finds time display element w/ in HTML 
   var timeDisplayEl =$("#currentDay");
-   function displayTime(){
-    var currentTime = dayjs().format("dddd, MMM DD, YYYY");
-    timeDisplayEl.text(currentTime);
-   }
-   displayTime();
-
-   function saveUserInput (){
-    //gets div id for hour clicked on 
-    var hourClicked = $(this).parent().attr("id"); 
-    console.log(hourClicked);
-    // gets text value user inputs for current time
-    var textInput = $(this).parent().children("textarea").val();
-    console.log(textInput);
-
-    // Saves user input into local storage. Name is Hour Name ID and the day so user inputs the text so
-    //they can look back to previous days if needed
-    localStorage.setItem(hourClicked + " " + dayjs().format("M/DD/YY"),JSON.stringify(textInput));
-   }
+  // finds and sets current time to the correct format
+  var currentTime = dayjs().format("dddd, MMM DD, YYYY");
+  // renders time on page
+  timeDisplayEl.text(currentTime);
+  }
+  
+  // function to save the user text for individual hour blocks
+  function saveUserInput (){
+  //gets div id for hour clicked on 
+  var hourClicked = $(this).parent().attr("id");
+  // sets value for local storage key. is is the hour clicked on the day
+  var saveKey = hourClicked + " " + dayjs().format("M/DD/YY");
+  // gets text value user inputs for current time
+  var textInput = $(this).parent().children("textarea").val();
+  // Saves user input into local storage.
+  localStorage.setItem(saveKey,textInput);
+  }
 
   // function changes row color depending on current time  
   function timeBlockColor(){
@@ -37,23 +44,24 @@ $(function () {
     $('.time-block').each(function() {
       var blockHour = parseInt(
         $(this)
+          // gets each "hour-xx" value
           .attr('id')
           // removes "hour-" from Div IDs leaving only the number 
           .split('-')[1])
           // adds the class of "past", "present", or "future". Uses If else statement to compare
-         $(this).addClass(function (){
-            if (blockHour < hourTextEl){
-              return "past";
-            } else if (blockHour === hourTextEl){
-              return "present";
-              } else {
-                return "future";
-              }}
+        $(this).addClass(function (){
+          if (blockHour < hourTextEl){
+            return "past";
+          } else if (blockHour === hourTextEl){
+            return "present";
+            } else {
+              return "future";
+            }}
           )
-        console.log(blockHour);
-        console.log(hourTextEl);
       });    
   }  
-   timeBlockColor();
-   $("button").click(saveUserInput);
+  displayTime(); 
+  timeBlockColor();
+  loadLocalStorage();
+  $("button").click(saveUserInput);
 });
